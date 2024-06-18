@@ -282,7 +282,7 @@ namespace ariel
         std::cout << std::endl;
     }
 
-    bool Board::addSettlementToBoard(size_t x, size_t y, Piece &piece)
+    bool Board::addSettlementToBoard(size_t x, size_t y, Piece *piece)
     {
         if (x >= vertices.size() || y >= vertices[x].size())
         {
@@ -291,7 +291,7 @@ namespace ariel
         }
         if (vertices[x][y].isValidVertex())
         {
-            vertices[x][y].setPiece(&piece);
+            vertices[x][y].setPiece(piece);
             return true;
         }
         std::cout << "Invalid Vertex! " << vertices[x][y].getPiece()->getPlayer()->getName() << " already has a settlement/city in this vertex" << std::endl;
@@ -319,7 +319,7 @@ namespace ariel
     {
         for (size_t i = 0; i < hexes.size(); i++)
         {
-            for (size_t j = 0; j < hexes[i].size(); i++)
+            for (size_t j = 0; j < hexes[i].size(); j++)
             {
                 const Hex &hex = hexes[i][j];
                 int num = hex.getNumber();

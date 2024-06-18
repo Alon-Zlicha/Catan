@@ -26,7 +26,6 @@ namespace ariel
         Vertex *getV1() const;
         Vertex *getV2() const;
         Piece *getPiece() const;
-        void printAdjHexes() const;
         void addToAdjacentHexes(Hex *hex);
         void addToAdjacentEdges(Edge *edge);
         void setPiece(Piece *p);
@@ -36,4 +35,4 @@ namespace ariel
         bool isNearRoad(const Player &p);
     };
 }
-#endif // EDGE_HPP
+#endif 

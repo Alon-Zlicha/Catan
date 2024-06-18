@@ -18,10 +18,7 @@ namespace ariel
         std::string getCardType() const;
         static DevelopmentCard *createDevelopmentCard();
         virtual bool playCard(Player &p,Catan &catan) = 0;
-        friend bool operator==(const DevelopmentCard &card1,const DevelopmentCard &card2);
-        friend bool operator!=(const DevelopmentCard &card1,const DevelopmentCard &card2);
     };
-
 } 
 
 #endif 

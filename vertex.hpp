@@ -29,16 +29,14 @@ namespace ariel
         void addToAdjacentHexes(Hex *hex);
         void addToAdjacentEdges(Edge *edge);
         void addToAdjacentVertices(Vertex * vertex);
-        void printAdjHexes();
-        void printAdjVertices();
-        void printAdjEdges();
         bool isAdjacentHex(const Hex &hex) const;
         bool isValidVertex();
         Piece *getPiece() const;
         void setPiece(Piece *p);
         friend bool operator==(const Vertex &v1, const Vertex &v2);
-        bool isNearRoad(const Player &p);
-        bool isFarFromSettlement(const Player &p);
+        bool isNearRoad();
+        bool isFarFromSettlement();
+        std::vector<Vertex*> &getAdjacentVertices();
     };
 }
 

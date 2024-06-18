@@ -21,12 +21,11 @@ namespace ariel
         ~Catan();
         Player &ChooseStartingPlayer();
         Board &getBoard();
-        void printWinner();
+        std::string printWinner();
         void nextTurn();
         Player *getTurn();
         void getOtherPlayers(Player *&other1, Player *&other2);
         bool checkWinner();
     };
 }
-
 #endif 

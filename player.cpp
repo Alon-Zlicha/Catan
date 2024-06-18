@@ -38,16 +38,11 @@ namespace ariel
         return this->_name;
     }
 
-    std::ostream &operator<<(std::ostream &os, const Player &p)
-    {
-        os << "Player: " << p._name << ", Points: " << p._points;
-        return os;
-    }
-
     bool Player::placeSettlementStart(size_t x, size_t y, Board &b)
     {
+
         Settlement *s = new Settlement(this, x, y);
-        if (b.addSettlementToBoard(x, y, *s))
+        if (b.addSettlementToBoard(x, y, s))
         {
             addPieceToPlayer(s);
             this->_points++;
@@ -58,6 +53,7 @@ namespace ariel
             }
             return true;
         }
+        delete s;
         return false;
     }
 
@@ -66,31 +62,35 @@ namespace ariel
         if (resources[BRICK] >= 1 && resources[LUMBER] >= 1 && resources[GRAIN] >= 1 && resources[WOOL] >= 1)
         {
             Vertex *v = b.getVertexByCoordinates(x, y);
-            if (v->isNearRoad(*this) && v->isFarFromSettlement(*this))
+            if (v != nullptr)
             {
-                Settlement *s = new Settlement(this, x, y);
-                if (b.addSettlementToBoard(x, y, *s))
+                if (v->isFarFromSettlement() && v->isNearRoad())
                 {
-                    addPieceToPlayer(s);
-                    resources[BRICK]--;
-                    resources[LUMBER]--;
-                    resources[GRAIN]--;
-                    resources[WOOL]--;
-                    this->_points++;
-                    return true;
+                    Settlement *s = new Settlement(this, x, y);
+                    if (b.addSettlementToBoard(x, y, s))
+                    {
+                        addPieceToPlayer(s);
+                        resources[BRICK]--;
+                        resources[LUMBER]--;
+                        resources[GRAIN]--;
+                        resources[WOOL]--;
+                        this->_points++;
+                        return true;
+                    }
+                    else
+                    {
+                        delete s;
+                        return false;
+                    }
+                }
+                else
+                {
+                    cout << this->_name << "Failed to place settlement! You can place a new settlement only next to a road and at least two vertices away from another settlement or city." << std::endl;
+                    return false;
                 }
             }
-            else
-            {
-                cout << "Fail placing Settlement! You can place a new Settlement only near a road and at least two vertices away from another Settlement/City" << std::endl;
-                return false;
-            }
         }
-        else
-        {
-            cout << "Fail placing Settlement! You don't have enough resources.1 Brick, 1 Lumber, 1 Grain and 1 Wool are needed" << std::endl;
-            return false;
-        }
+        cout << "Failed to place settlement! You don't have enough resources. You need 1 brick, 1 lumber, 1 grain, and 1 wool." << std::endl;
         return false;
     }
 
@@ -108,6 +108,7 @@ namespace ariel
             addPieceToPlayer(r);
             return true;
         }
+        delete r;
         return false;
     }
 
@@ -127,19 +128,25 @@ namespace ariel
                 if (b.addRoadToBoard(*e, *r))
                 {
                     addPieceToPlayer(r);
+                    r->setPlayer(this);
                     resources[BRICK]--;
                     resources[LUMBER]--;
                     return true;
                 }
+                else
+                {
+                    delete r;
+                    return false;
+                }
             }
             else
             {
-                cout << "Fail placing Road! You can place a road only near your settlements, cities or roads" << endl;
+                cout << "Failed to place road! Roads can only be placed adjacent to your own settlements, cities, or your own existing roads." << endl;
             }
         }
         else
         {
-            cout << "Fail placing Road! You don't have enough resources.1 Brick and 1 Lumber are needed." << std::endl;
+            cout << "Failed to place road! You don't have enough resources. You need 1 brick and 1 lumber." << std::endl;
         }
         return false;
     }
@@ -149,14 +156,14 @@ namespace ariel
         size_t x, y, x2, y2;
         while (true)
         {
-            cout << "place first road - ";
+            cout << "Place first road - ";
             cin >> x >> y >> x2 >> y2;
             Board &b = catan.getBoard();
             if (this->placeRoad(x, y, x2, y2, b))
             {
                 break;
             }
-            cout << "press 1 if you want to give up, any other number to keep trying- " << endl;
+            cout << "Press 1 to give up, any other number to keep trying - " << endl;
             cin >> x;
             if (x == 1)
             {
@@ -168,14 +175,14 @@ namespace ariel
         }
         while (true)
         {
-            cout << "place second road - ";
+            cout << "Place second road - ";
             cin >> x >> y >> x2 >> y2;
             Board &b = catan.getBoard();
             if (this->placeRoad(x, y, x2, y2, b))
             {
                 return;
             }
-            cout << "press 1 if you want to give up, any other number to keep trying- " << endl;
+            cout << "Press 1 to give up, any other number to keep trying - " << endl;
             cin >> x;
             if (x == 1)
             {
@@ -189,7 +196,6 @@ namespace ariel
 
     bool Player::upgradeToCity(size_t x, size_t y, Board &b)
     {
-        printPieces();
         if (resources[ORE] >= 3 && resources[GRAIN] >= 2)
         {
             bool found = false;
@@ -207,18 +213,18 @@ namespace ariel
                     }
                     else
                     {
-                        cout << "Fail upgrading to city! The piece is Already a city." << endl;
+                        cout << "Failed to upgrade to a city! The piece is already a city." << endl;
                     }
                 }
             }
             if (!found)
             {
-                std::cout << "Fail upgrading to city! You don't have settlement in the given vertex." << std::endl;
+                std::cout << "Failed to upgrade to city! You don't have a settlement at the given vertex." << std::endl;
             }
         }
         else
         {
-            std::cout << "Fail upgrading to city! You don't have enough resources.3 Ore and 2 Grain are needed." << std::endl;
+            std::cout << "Failed to upgrade to city! You don't have enough resources. You need 3 ore and 2 grain." << std::endl;
         }
         return false;
     }
@@ -306,7 +312,7 @@ namespace ariel
             {
                 printResources();
                 cout << this->getName() << " needs to return " << total / 2 << " resources - " << endl;
-                cout << "Enter the amounts of resources to return in the following order: (Brick, Ore, Grain, Wool, Lumber): ";
+                cout << "Enter the amounts of resources to return in the following order: (Brick, Ore, Grain, Wool, Lumber):";
                 int returnResources[SIZE];
                 totalToReturn = 0;
                 bool validInput = true;
@@ -363,8 +369,9 @@ namespace ariel
                 resources[GRAIN]--;
                 return true;
             }
+            return false;
         }
-        std::cout << "Fail buying development card! You don't have enough resources.1 Ore and 1 Grain and 1 Wool are needed." << std::endl;
+        std::cout << "Failed to buy a development card! You don't have enough resources. You need 1 ore, 1 grain, and 1 wool." << std::endl;
         return false;
     }
 
@@ -429,7 +436,7 @@ namespace ariel
     }
     void Player::printPieces() const
     {
-        cout << this->_name << " pieces:  " << endl;
+        cout << this->_name << "'s pieces:  " << endl;
         for (size_t i = 0; i < _pieces.size(); i++)
         {
             cout << _pieces[i]->getType() << " - " << _pieces[i]->toString() << endl;
@@ -446,7 +453,7 @@ namespace ariel
         }
         if (otherPlayer2->resources[choice] > 0)
         {
-            otherPlayer1->resources[choice]--;
+            otherPlayer2->resources[choice]--;
             this->resources[choice]++;
         }
     }
@@ -472,7 +479,7 @@ namespace ariel
         otherPlayer->printResources();
         otherPlayer->printDevelopmentCards();
         cout << "Starting trade with " << otherPlayer->getName() << endl;
-        cout << "Enter the amounts of resources to receive in this order: (Brick, Ore, Grain, Wool, Lumber): ";
+        cout << "Enter the amounts of resources to receive in the following order: (Brick, Ore, Grain, Wool, Lumber):";
         int receiveResources[SIZE];
         for (int i = 0; i < SIZE; i++)
         {
@@ -483,7 +490,7 @@ namespace ariel
                 return false;
             }
         }
-        cout << "Enter the amounts of development cards to receive in this order: (Knight, Victory point, Year of Plenty, Monopoly, Roads Building): ";
+        cout << "Enter the amounts of development cards to receive in the following order: (Knight, Victory point, Year of Plenty, Monopoly, Roads Building): ";
         int receiveCards[SIZE];
         for (int i = 0; i < SIZE; i++)
         {
@@ -494,7 +501,7 @@ namespace ariel
                 return false;
             }
         }
-        cout << "Enter the amounts of resources to give in this order: (Brick, Ore, Grain, Wool, Lumber): ";
+        cout << "Enter the amounts of resources to give in the following order: (Brick, Ore, Grain, Wool, Lumber): ";
         int giveResources[SIZE];
         for (int i = 0; i < SIZE; i++)
         {
@@ -505,7 +512,7 @@ namespace ariel
                 return false;
             }
         }
-        cout << "Enter the amounts of development cards to give in this order: (Knight, Victory point, Year of Plenty, Monopoly, Roads Building): ";
+        cout << "Enter the amounts of development cards to give in the following order: (Knight, Victory point, Year of Plenty, Monopoly, Roads Building): ";
         int giveCards[SIZE];
         for (int i = 0; i < SIZE; i++)
         {
@@ -516,10 +523,10 @@ namespace ariel
                 return false;
             }
         }
-        char confirmation;
-        cout << "Confirm trade (y/n): ";
+        int confirmation;
+        cout << "Press 1 to confirm the trade, any other number to cancel: ";
         cin >> confirmation;
-        if (confirmation != 'y' && confirmation != 'Y')
+        if (confirmation != 1)
         {
             cout << "Trade cancelled." << endl;
             return false;
@@ -532,91 +539,106 @@ namespace ariel
             resources[i] += receiveResources[i];
             otherPlayer->resources[i] -= receiveResources[i];
         }
-        while (receiveCards[0] > 0 || receiveCards[1] > 0 || receiveCards[2] > 0 || receiveCards[3] > 0 || receiveCards[4] > 0)
+        const string developmentCardTypes[SIZE] = {"Knight", "Victory point", "Year of plenty", "Monopoly", "Roads building"};
+        for (int i = 0; i < SIZE; ++i)
         {
-            for (size_t k = 0; k < otherPlayer->cards.size(); k++)
+            while (receiveCards[i] > 0)
             {
-                DevelopmentCard *cardToMove = otherPlayer->cards[k];
-                if (otherPlayer->cards[k]->getCardType() == "Knight" && receiveCards[0] > 0)
+                bool cardFound = false;
+
+                // Loop through otherPlayer's cards
+                for (size_t k = 0; k < otherPlayer->cards.size(); ++k)
                 {
-                    if (otherPlayer->hasThreeKnights())
+                    DevelopmentCard *cardToMove = otherPlayer->cards[k];
+
+                    if (cardToMove && cardToMove->getCardType() == developmentCardTypes[i])
                     {
-                        otherPlayer->updatePoints(-2);
+                        cardFound = true;
+
+                        if (developmentCardTypes[i] == "Knight")
+                        {
+                            if (otherPlayer->hasThreeKnights())
+                            {
+                                otherPlayer->updatePoints(-2);
+                            }
+                            otherPlayer->moveDevelopmentCardTo(*this, cardToMove);
+                            if (this->hasThreeKnights())
+                            {
+                                this->updatePoints(2);
+                            }
+                        }
+                        else if (developmentCardTypes[i] == "Victory point")
+                        {
+                            otherPlayer->moveDevelopmentCardTo(*this, cardToMove);
+                            otherPlayer->updatePoints(-1);
+                            this->updatePoints(1);
+                        }
+                        else
+                        {
+                            otherPlayer->moveDevelopmentCardTo(*this, cardToMove);
+                        }
+
+                        receiveCards[i]--;
+                        break;
                     }
-                    // move card from other to this here
-                    otherPlayer->moveDevelopmentCardTo(*this, cardToMove);
-                    if (this->hasThreeKnights())
-                    {
-                        this->updatePoints(2);
-                    }
-                    receiveCards[0]--;
                 }
-                else if (otherPlayer->cards[k]->getCardType() == "Victory point" && receiveCards[1] > 0)
+
+                if (!cardFound)
                 {
-                    otherPlayer->moveDevelopmentCardTo(*this, cardToMove);
-                    otherPlayer->updatePoints(-1);
-                    this->updatePoints(1);
-                    receiveCards[1]--;
-                }
-                else if (otherPlayer->cards[k]->getCardType() == "Year of plenty" && receiveCards[2] > 0)
-                {
-                    // move card from other to this here
-                    otherPlayer->moveDevelopmentCardTo(*this, cardToMove);
-                    receiveCards[2]--;
-                }
-                else if (otherPlayer->cards[k]->getCardType() == "Monopoly" && receiveCards[3] > 0)
-                {
-                    // move card from other to this here
-                    otherPlayer->moveDevelopmentCardTo(*this, cardToMove);
-                    receiveCards[3]--;
-                }
-                else if (otherPlayer->cards[k]->getCardType() == "Roads building" && receiveCards[4] > 0)
-                {
-                    otherPlayer->moveDevelopmentCardTo(*this, cardToMove);
-                    receiveCards[4]--;
+                    cout << otherPlayer->getName() << " doesn't have enough " << developmentCardTypes[i] << " cards to give. Trade aborted." << endl;
+                    return false;
                 }
             }
         }
-        while (giveCards[0] > 0 || giveCards[1] > 0 || giveCards[2] > 0 || giveCards[3] > 0 || giveCards[4] > 0)
-        {
-            for (size_t k = 0; k < this->cards.size(); k++)
-            {
-                DevelopmentCard *cardToMove = cards[k];
-                if (cardToMove->getCardType() == "Knight" && giveCards[0] > 0)
-                {
-                    if (this->hasThreeKnights())
-                    {
-                        this->updatePoints(-2);
-                    }
-                    this->moveDevelopmentCardTo(*otherPlayer, cardToMove);
-                    if (otherPlayer->hasThreeKnights())
-                    {
-                        otherPlayer->updatePoints(2);
-                    }
-                    giveCards[0]--;
-                }
-                else if (cardToMove->getCardType() == "Victory point" && giveCards[1] > 0)
-                {
-                    this->moveDevelopmentCardTo(*otherPlayer, cardToMove);
-                    this->updatePoints(-1);
-                    otherPlayer->updatePoints(1);
-                    giveCards[1]--;
-                }
-                else if (otherPlayer->cards[k]->getCardType() == "Year of plenty" && giveCards[2] > 0)
-                {
-                    this->moveDevelopmentCardTo(*otherPlayer, cardToMove);
-                    giveCards[2]--;
-                }
-                else if (otherPlayer->cards[k]->getCardType() == "Monopoly" && giveCards[3] > 0)
-                {
 
-                    this->moveDevelopmentCardTo(*otherPlayer, cardToMove);
-                    giveCards[3]--;
-                }
-                else if (otherPlayer->cards[k]->getCardType() == "Roads building" && giveCards[4] > 0)
+        // Loop through giveCards and move corresponding cards from this player to otherPlayer
+        for (int i = 0; i < SIZE; ++i)
+        {
+            while (giveCards[i] > 0)
+            {
+                bool cardFound = false;
+
+                // Loop through this player's cards
+                for (size_t k = 0; k < this->cards.size(); ++k)
                 {
-                    this->moveDevelopmentCardTo(*otherPlayer, cardToMove);
-                    giveCards[4]--;
+                    DevelopmentCard *cardToMove = this->cards[k];
+
+                    if (cardToMove && cardToMove->getCardType() == developmentCardTypes[i])
+                    {
+                        cardFound = true;
+
+                        if (developmentCardTypes[i] == "Knight")
+                        {
+                            if (this->hasThreeKnights())
+                            {
+                                this->updatePoints(-2);
+                            }
+                            this->moveDevelopmentCardTo(*otherPlayer, cardToMove);
+                            if (otherPlayer->hasThreeKnights())
+                            {
+                                otherPlayer->updatePoints(2);
+                            }
+                        }
+                        else if (developmentCardTypes[i] == "Victory point")
+                        {
+                            this->moveDevelopmentCardTo(*otherPlayer, cardToMove);
+                            this->updatePoints(-1);
+                            otherPlayer->updatePoints(1);
+                        }
+                        else
+                        {
+                            this->moveDevelopmentCardTo(*otherPlayer, cardToMove);
+                        }
+
+                        giveCards[i]--;
+                        break;
+                    }
+                }
+
+                if (!cardFound)
+                {
+                    cout << "You don't have enough " << developmentCardTypes[i] << " cards to give. Trade aborted." << endl;
+                    return false;
                 }
             }
         }
@@ -677,5 +699,9 @@ namespace ariel
     int Player::getTotalReources()
     {
         return resources[BRICK] + resources[ORE] + resources[WOOL] + resources[GRAIN] + resources[LUMBER];
+    }
+    std::vector<DevelopmentCard *> &Player::getDevCards()
+    {
+        return this->cards;
     }
 }

@@ -17,6 +17,7 @@ namespace ariel
         Piece(Player *p, size_t x, size_t y);
         virtual ~Piece(); 
         Player *getPlayer() const;
+        void setPlayer(Player *p);
         Vertex *getVertex() const;
         virtual std::string getType() const = 0;
         virtual bool upgradeToCity() =0;

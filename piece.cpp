@@ -14,6 +14,11 @@ namespace ariel
         return this->player;
     }
 
+    void Piece::setPlayer(Player *p)
+    {
+        this->player=p;
+    }
+
     Vertex *Piece::getVertex() const
     {
         return this->vertex;

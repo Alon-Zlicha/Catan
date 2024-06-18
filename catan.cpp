@@ -26,9 +26,9 @@ namespace ariel
         return board;
     }
 
-    void Catan::printWinner()
+    std::string Catan::printWinner()
     {
-        std::cout << "The winner is: " << winner->getName() << " with " << winner->getPoints() << " points!" << std::endl;
+        return  "The winner is: " + winner->getName() + " with " +std::to_string( winner->getPoints()) + " points!";
     }
 
     Player *Catan::getTurn()

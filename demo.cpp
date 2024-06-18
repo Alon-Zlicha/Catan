@@ -18,7 +18,7 @@ int main()
     Player p2("Yossi");
     Player p3("Dana");
     Catan catan(p1, p2, p3);
-    Board b = catan.getBoard();
+    Board &b = catan.getBoard();
     size_t x, y, x2, y2;
     Player *turn = catan.getTurn();
     for (int i = 0; i < 3; i++)
@@ -26,34 +26,37 @@ int main()
         b.printHexas();
         while (true)
         {
-            cout << "place first settlement - ";
+            cout << "Place first settlement - ";
             cin >> x >> y;
             if (turn->placeSettlementStart(x, y, b))
             {
                 break;
             }
         }
+        b.printHexas();
         while (true)
         {
-            cout << "place second settlement - ";
+            cout << "Place second settlement - ";
             cin >> x >> y;
             if (turn->placeSettlementStart(x, y, b))
             {
                 break;
             }
         }
+        b.printHexas();
         while (true)
         {
-            cout << "place first road - ";
+            cout << "Place first road - ";
             cin >> x >> y >> x2 >> y2;
             if (turn->placeRoadStart(x, y, x2, y2, b))
             {
                 break;
             }
         }
+        b.printHexas();
         while (true)
         {
-            cout << "place second road - ";
+            cout << "Place second road - ";
             cin >> x >> y >> x2 >> y2;
             if (turn->placeRoadStart(x, y, x2, y2, b))
             {
@@ -77,7 +80,7 @@ int main()
         int choice;
         if (!rolled)
         {
-            cout << "Press 1 for using promotion card, press any other number for rolling dices  - " << endl;
+            cout << "Press 1 to use a promotion card, press any other number to roll the dice - " << endl;
             cin >> choice;
             if (choice == 1)
             {
@@ -118,7 +121,7 @@ int main()
         }
         if (!traded)
         {
-            cout << "Press 1 for using promotion card , press 2 for trading with another player. Press any other number to skip  - " << endl;
+            cout << "Press 1 to use a promotion card, press 2 to trade with another player. Press any other number to skip - " << endl;
             cin >> choice;
             if (choice == 1)
             {
@@ -157,7 +160,7 @@ int main()
                 {
                     Player *otherPlayer1, *otherPlayer2;
                     catan.getOtherPlayers(otherPlayer1, otherPlayer2);
-                    cout << "Choose the player you want to trade with: 1 for trade with " << otherPlayer1->getName() << " or 2 for trade with " << otherPlayer2->getName() << ".Press any other number to cancle " << endl;
+                    cout << "Choose the player you want to trade with: press 1 to trade with " << otherPlayer1->getName() << " or 2 to trade with " << otherPlayer2->getName() << ".Press any other number to cancle " << endl;
                     cin >> choice;
                     if (choice == 1)
                     {
@@ -189,7 +192,7 @@ int main()
             }
         }
         traded = true;
-        cout << "Press 1 for using promotion card, 2 for placing a settlement, 3 for placing a road, 4 for upgrading to city or 5 for buying development card.Press any other number to end the turn  - " << endl;
+        cout << "Press 1 to use a promotion card, 2 to place a settlement, 3 to place a road, 4 to upgrade to a city, or 5 to buy a development card. Press any other number to end the turn - " << endl;
         cin >> choice;
         if (choice == 1)
         {
@@ -227,7 +230,9 @@ int main()
         {
             while (true)
             {
-                cout << "place settlement - ";
+                b.printHexas();
+                turn->printPieces();
+                cout << "Place settlement - ";
                 cin >> x >> y;
                 if (turn->placeSettlement(x, y, b))
                 {
@@ -240,7 +245,7 @@ int main()
                     }
                     break;
                 }
-                cout << "press 1 if you want to cancel, any other number to for keep trying- " << endl;
+                cout << "Press 1 if you want to cancel, any other number to keep trying - " << endl;
                 cin >> x;
                 if (x == 1)
                 {
@@ -252,7 +257,9 @@ int main()
         {
             while (true)
             {
-                cout << "place road - ";
+                b.printHexas();
+                turn->printPieces();
+                cout << "Place road - ";
                 cin >> x >> y >> x2 >> y2;
                 if (turn->placeRoad(x, y, x2, y2, b))
                 {
@@ -261,7 +268,7 @@ int main()
                     turn->printPoints();
                     break;
                 }
-                cout << "press 1 if you want to cancel, any other number to for keep trying- " << endl;
+                cout << "Press 1 if you want to cancel, any other number to keep trying - " << endl;
                 cin >> x;
                 if (x == 1)
                 {
@@ -273,7 +280,9 @@ int main()
         {
             while (true)
             {
-                cout << "Choose the settlement that you want to upgrade - " << endl;
+                b.printHexas();
+                turn->printPieces();
+                cout << "Choose the settlement you want to upgrade - " << endl;
                 cin >> x >> y;
                 if (turn->upgradeToCity(x, y, b))
                 {
@@ -286,7 +295,7 @@ int main()
                     }
                     break;
                 }
-                cout << "Press 1 if you want to cancel, any other number to for keep trying- " << endl;
+                cout << "Press 1 if you want to cancel, any other number to keep trying - " << endl;
                 cin >> x;
                 if (x == 1)
                 {
@@ -311,6 +320,6 @@ int main()
         }
     }
     cout << "Game Over" << endl;
-    catan.printWinner();
+    cout << catan.printWinner() << endl;
     return 0;
 }

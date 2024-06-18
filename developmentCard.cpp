@@ -19,7 +19,7 @@ namespace ariel
         return cardType;
     }
 
-    DevelopmentCard *DevelopmentCard::createDevelopmentCard()  //factory design pattern when player buy a development card
+    DevelopmentCard *DevelopmentCard::createDevelopmentCard() // factory design pattern when player buy a development card
     {
         int random;
         do
@@ -47,16 +47,7 @@ namespace ariel
             default:
                 return nullptr;
             }
-        } while (random == 3); // Retry if knight card was selected and there are already 3 knights
+        } while (random == 3 || random == 4); // Retry if knight card was selected and there are already 3 or victory point card was selected and there are already 4 
         return nullptr;
-    }
-
-    bool operator==(const DevelopmentCard &card1, const DevelopmentCard &card2)
-    {
-        return &card1 == &card2;
-    }
-    bool operator!=(const DevelopmentCard &card1, const DevelopmentCard &card2)
-    {
-        return !(card1==card2);
     }
 }

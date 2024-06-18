@@ -41,7 +41,6 @@ namespace ariel
         Player(std::string name);
         ~Player();
         std::string getName() const;
-        friend std::ostream &operator<<(std::ostream &os, const Player &p); 
         bool placeSettlementStart(size_t x, size_t y, Board &b);
         bool placeSettlement(size_t x, size_t y, Board &b);
         bool placeRoadStart(size_t x1, size_t y1, size_t x2, size_t y2, Board &b);
@@ -63,7 +62,7 @@ namespace ariel
         void addResourcesFromTheBank(int choice1, int choice2); 
         bool trade(Player *p);
         int* getResources(); //for test.cpp
-
+        std::vector<DevelopmentCard *> &getDevCards(); //for test.cpp
     };
 }
 

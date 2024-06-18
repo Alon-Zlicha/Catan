@@ -9,7 +9,7 @@ namespace ariel
 
     bool MonopolyCard::playCard(Player &p,Catan &catan)
     {
-        std::cout << "Choose Resource: 1 for brick, 2 for ore, 3 for grain, 4 for wool or 5 for lumber  - " << std::endl;
+        std::cout << "Choose a resource: press 1 for brick, 2 for ore, 3 for grain, 4 for wool, or 5 for lumber - " << std::endl;
         int choice;
         std::cin >> choice; 
         if(choice>5 || choice<1){
