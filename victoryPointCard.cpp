@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #include "victoryPointCard.hpp"
 
 namespace ariel
@@ -8,8 +9,6 @@ namespace ariel
     {
         totalVictoryPointCards++;
     }
-
-    VictoryPointCard::~VictoryPointCard() {}
 
     bool VictoryPointCard::playCard(Player &p,Catan &catan)
     {

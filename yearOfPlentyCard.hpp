@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #ifndef YEAROFPLENTYCARD_HPP
 #define YEAROFPLENTYCARD_HPP
 
@@ -9,7 +10,6 @@ namespace ariel {
     class YearOfPlentyCard: public DevelopmentCard {
     public:
         YearOfPlentyCard();
-        ~YearOfPlentyCard();
         bool playCard(Player& p,Catan &catan);
     };
 

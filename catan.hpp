@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #ifndef CATAN_HPP
 #define CATAN_HPP
 

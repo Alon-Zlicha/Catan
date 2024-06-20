@@ -1,11 +1,10 @@
+/*alonz1414@gmail.com*/
 #include "yearOfPlentyCard.hpp"
 
 namespace ariel
 {
 
     YearOfPlentyCard::YearOfPlentyCard() : DevelopmentCard("Year of plenty") {}
-
-    YearOfPlentyCard::~YearOfPlentyCard() {}
 
     bool YearOfPlentyCard::playCard(Player &p,Catan &catan)
     {

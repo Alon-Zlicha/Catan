@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #include "monopolyCard.hpp"
 
 namespace ariel
@@ -5,7 +6,6 @@ namespace ariel
 
     MonopolyCard::MonopolyCard() : DevelopmentCard("Monopoly") {}
 
-    MonopolyCard::~MonopolyCard() {}
 
     bool MonopolyCard::playCard(Player &p,Catan &catan)
     {

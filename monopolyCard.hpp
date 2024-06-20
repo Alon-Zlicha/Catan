@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #ifndef MONOPOLYCARD_HPP
 #define MONOPOLYCARD_HPP
 
@@ -9,7 +10,6 @@ namespace ariel {
     class MonopolyCard : public DevelopmentCard {
     public:
         MonopolyCard();
-        ~MonopolyCard();
         bool playCard(Player& p,Catan &catan);
     };
 

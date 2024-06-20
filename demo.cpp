@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #include "player.hpp"
 #include "board.hpp"
 #include "piece.hpp"

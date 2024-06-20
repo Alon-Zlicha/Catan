@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #ifndef HEX_HPP
 #define HEX_HPP
 #include <string>

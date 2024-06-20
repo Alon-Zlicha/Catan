@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #ifndef SETTLEMENT_HPP
 #define SETTLEMENT_HPP
 

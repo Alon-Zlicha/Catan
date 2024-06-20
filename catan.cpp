@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #include "catan.hpp"
 #include <iostream>
 

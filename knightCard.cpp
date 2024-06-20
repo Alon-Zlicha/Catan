@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #include "knightCard.hpp"
 
 namespace ariel
@@ -8,8 +9,6 @@ namespace ariel
     {
         totalKnights++;
     }
-
-    KnightCard::~KnightCard() {}
 
     bool KnightCard::playCard(Player &p,Catan &catan)
     {

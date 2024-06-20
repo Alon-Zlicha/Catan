@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #include "doctest.h"
 #include "catan.hpp"
 #include "player.hpp"

@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #ifndef KNIGHTCARD_HPP
 #define KNIGHTCARD_HPP
 
@@ -11,7 +12,6 @@ namespace ariel
     {
     public:
         KnightCard();
-        ~KnightCard();
         bool playCard(Player &p,Catan &catan);
         static int getTotalKnights();       // Static method to get total knights in the game
     private:

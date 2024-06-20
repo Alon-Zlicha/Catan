@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #include "settlement.hpp"
 
 namespace ariel

@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #ifndef VICTORYPOINTCARD_HPP
 #define VICTORYPOINTCARD_HPP
 
@@ -11,7 +12,6 @@ namespace ariel
     {
     public:
         VictoryPointCard();
-        ~VictoryPointCard();
         bool playCard(Player &p,Catan &catan);
         static int getTotalVictoryPointCards(); // Static method to get total victory point cards in the game
 

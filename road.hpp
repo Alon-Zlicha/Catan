@@ -1,3 +1,4 @@
+/*alonz1414@gmail.com*/
 #ifndef ROAD_HPP
 #define ROAD_HPP
 
@@ -14,8 +15,8 @@ namespace ariel
 
     public:
         Road(Player *p, Edge *e);             
-        ~Road(); 
-        Vertex* getVertex2();         // needed beacuse the second vertex field
+        ~Road(); // // needed beacuse the second vertex field
+        Vertex* getVertex2();         
         std::string getType() const override; 
         bool upgradeToCity() override;        
         std::string toString() const override;
